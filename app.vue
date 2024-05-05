@@ -32,13 +32,3 @@ export default {
 	},
 };
 </script>
-
-<style>
-body {
-	color: white;
-	background-color: black;
-}
-.error {
-	color: red;
-}
-</style>
