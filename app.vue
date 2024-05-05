@@ -1,4 +1,3 @@
-<!-- pages/weather.vue -->
 <template>
 	<div>
 		<h1>Weather Forecast</h1>
@@ -7,12 +6,12 @@
 			<div v-if="error" class="error">{{ error }}</div>
 			<div v-else>
 				<div v-if="weather">
-					<div class="city">City: {{ weather.city }}</div>
+					<div class="city">City: {{ weather.name }}</div>
 					<div class="temperature">
-						Temperature: {{ weather.temperature }}°C
+						Temperature: {{ weather.main.temp }}°C
 					</div>
 					<div class="description">
-						Description: {{ weather.description }}
+						Description: {{ weather.weather[0].description }}
 					</div>
 				</div>
 				<div v-else>
@@ -24,33 +23,36 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
 	data() {
 		return {
 			loading: true,
-			error: null,
 			weather: null,
 		};
 	},
-	async asyncData({ $axios }) {
+	async created() {
+		const axiosInstance = axios.create();
 		try {
-			const response = await $axios.get(
-				"https://api.openweathermap.org/data/2.5/weather?q=London&appid=YOUR_API_KEY&units=metric"
+			const response = await axiosInstance.get(
+				"https://api.openweathermap.org/data/2.5/weather?q=London&appid=86f90b6cf6e79d28a502e8fbb80c1b0b&units=metric"
 			);
-			console.log("Response:", response.data);
-			return { weather: response.data };
+			this.weather = response.data;
 		} catch (error) {
 			console.error("Error fetching weather data:", error);
-			return { error: "Failed to fetch weather data" };
+		} finally {
+			this.loading = false;
 		}
-	},
-	mounted() {
-		this.loading = false;
 	},
 };
 </script>
 
 <style>
+body {
+	color: white;
+	background-color: black;
+}
 .error {
 	color: red;
 }
